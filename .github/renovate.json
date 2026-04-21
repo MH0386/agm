@@ -1,0 +1,7 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "extends": ["config:best-practices"],
+  "lockFileMaintenance": { "enabled": true },
+  "osvVulnerabilityAlerts": true
+}
