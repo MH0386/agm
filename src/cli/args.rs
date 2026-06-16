@@ -35,6 +35,14 @@ pub enum Commands {
 pub enum SkillAction {
     /// List all managed skills
     List,
+    /// Add a skill from a registry source
+    Add {
+        /// Registry source (e.g. github:owner/repo)
+        source: String,
+        /// Name of the specific skill to install
+        #[arg(long)]
+        skill: String,
+    },
 }
 
 #[derive(Debug, Subcommand)]

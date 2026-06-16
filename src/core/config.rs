@@ -1,4 +1,4 @@
-use anyhow::Result;
+use color_eyre::eyre::Result;
 use serde::{Deserialize, Serialize};
 use std::fs::{File, read_to_string};
 use std::io::BufWriter;
