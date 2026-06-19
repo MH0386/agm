@@ -22,7 +22,7 @@ pub struct SkillContent {
     pub name: String,
     pub content: String,
     pub sha: String,
-    pub encoding: String,
+    pub encoding: Option<String>,
     pub size: usize,
 }
 
@@ -65,6 +65,7 @@ pub async fn fetch_skill(
         "Fetching file content from GitHub: owner = {}, repo = {}, path = {}",
         owner, repo, path
     );
+
     let response = client
         .repos(owner, repo)
         .get_content()
@@ -73,11 +74,27 @@ pub async fn fetch_skill(
         .await
         .context("Failed to fetch file from GitHub")?;
     debug!("GitHub response: {:?}", response);
-    let item = response
-        .items
-        .first()
-        .context("No content returned from GitHub")?;
-    debug!("GitHub first item: {:?}", item);
+
+    // Ensure we got exactly one item and it's a file (not a dir/symlink/submodule)
+    if response.items.is_empty() {
+        bail!("No content returned from GitHub");
+    }
+    if response.items.len() > 1 {
+        bail!(
+            "GitHub returned {} items for a single file path; expected exactly 1",
+            response.items.len()
+        );
+    }
+    let item = &response.items[0];
+    if item.r#type != "file" {
+        bail!(
+            "GitHub returned a '{}' at '{}', expected a file",
+            item.r#type,
+            path
+        );
+    }
+    debug!("GitHub item: {:?}", item);
+
     let encoded = item
         .content
         .as_deref()
@@ -87,17 +104,21 @@ pub async fn fetch_skill(
     let bytes = STANDARD
         .decode(&cleaned)
         .context("Failed to decode base64 content")?;
+    // Extract skill name from path, handling edge cases
+    let name = item
+        .path
+        .trim_end_matches("/SKILL.md")
+        .rsplit('/')
+        .next()
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+        .context("Could not extract skill name from path (empty name after trimming)")?;
+
     Ok(SkillContent {
-        name: item
-            .path
-            .trim_end_matches("/SKILL.md")
-            .rsplit('/')
-            .next()
-            .unwrap()
-            .to_string(),
+        name,
         content: String::from_utf8(bytes).context("File content is not valid UTF-8")?,
         sha: item.sha.clone(),
-        encoding: item.encoding.clone().expect("Encoding should be present"),
+        encoding: item.encoding.clone(),
         size: item.size as usize,
     })
 }
@@ -144,15 +165,18 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
 /// Detects the active harness from the current working directory and writes
 /// the skill to the appropriate location following the agentskills.io standard.
 pub async fn auto_install_skill(skill: &SkillContent) -> Result<()> {
-    let harness: Harness = Harness::detect();
+    let harness: Harness = Harness::detect()?;
     info!("Detected harness: {}", harness);
-    install_to_harness(&harness, &skill).await
+    install_to_harness(&harness, skill).await
 }
 
 /// Downloads a specific skill from the repository.
 ///
 /// According to Registry-style, looks for `skills/{skill_name}/SKILL.md` for repositories.
 pub async fn add_skill(source: RegistrySource, skill_name: &str) -> Result<()> {
+    // Validate skill name before any network I/O (defense-in-depth)
+    validate_skill_name(skill_name)?;
+
     // First, try to fetch from skills/ directory (registry style)
     let skill_file_path = format!("skills/{}/SKILL.md", skill_name);
     match source {

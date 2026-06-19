@@ -1,7 +1,8 @@
-use color_eyre::eyre::Result;
+use color_eyre::eyre::{Result, bail};
 use serde::{Deserialize, Serialize};
 use std::fs::{File, read_to_string};
 use std::io::BufWriter;
+use std::path::Path;
 
 const CONFIG_FILE: &str = "agm.json";
 const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -26,11 +27,16 @@ impl AgmConfig {
 
 /// Initializes the config file at the given path.
 pub fn init_config(config: &AgmConfig) -> Result<()> {
-    // Create or overwrite the file
+    // Check if config already exists to prevent silent overwrite
+    if Path::new(CONFIG_FILE).exists() {
+        bail!("{} already exists.", CONFIG_FILE);
+    }
+
+    // Create the config file
     let file = File::create(CONFIG_FILE)?;
     let writer = BufWriter::new(file);
 
-    // Serialize and write directly to the file stream
+    // Serialize and write to the file stream
     serde_json::to_writer_pretty(writer, &config)?;
 
     println!("Created {}.", CONFIG_FILE);
