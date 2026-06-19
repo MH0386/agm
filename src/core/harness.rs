@@ -1,4 +1,6 @@
 use crate::core::skills::SkillsDir;
+use color_eyre::eyre::{Context, ContextCompat, Result};
+use dirs;
 use std::env;
 use std::path::Path;
 
@@ -22,36 +24,35 @@ impl Harness {
     /// current working directory.
     ///
     /// Priority order: OpenCode > Pi > Standard (default).
-    pub fn detect() -> Self {
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the current directory or home directory cannot be determined.
+    pub fn detect() -> Result<Self> {
+        let current_dir = env::current_dir().context("Failed to get current directory")?;
+        let home_dir = dirs::home_dir().context("Failed to determine home directory")?;
+
         if Path::new(".opencode").is_dir() {
-            Self::OpenCode {
+            Ok(Self::OpenCode {
                 skills_dir: SkillsDir {
-                    project: env::current_dir().unwrap().join(".opencode").join("skills"),
-                    global: env::home_dir()
-                        .unwrap()
-                        .join(".config")
-                        .join("opencode")
-                        .join("skills"),
+                    project: current_dir.join(".opencode").join("skills"),
+                    global: home_dir.join(".config").join("opencode").join("skills"),
                 },
-            }
+            })
         } else if Path::new(".pi").is_dir() {
-            Self::Pi {
+            Ok(Self::Pi {
                 skills_dir: SkillsDir {
-                    project: env::current_dir().unwrap().join(".pi").join("skills"),
-                    global: env::home_dir()
-                        .unwrap()
-                        .join(".pi")
-                        .join("agent")
-                        .join("skills"),
+                    project: current_dir.join(".pi").join("skills"),
+                    global: home_dir.join(".pi").join("agent").join("skills"),
                 },
-            }
+            })
         } else {
-            Self::Standard {
+            Ok(Self::Standard {
                 skills_dir: SkillsDir {
-                    project: env::current_dir().unwrap().join(".agents").join("skills"),
-                    global: env::home_dir().unwrap().join(".agents").join("skills"),
+                    project: current_dir.join(".agents").join("skills"),
+                    global: home_dir.join(".agents").join("skills"),
                 },
-            }
+            })
         }
     }
 
