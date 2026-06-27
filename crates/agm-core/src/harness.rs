@@ -1,4 +1,4 @@
-use crate::core::skills::SkillsDir;
+use crate::skills::SkillsDir;
 use color_eyre::eyre::{Context, ContextCompat, Result};
 use dirs;
 use std::env;

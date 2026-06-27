@@ -1,5 +1,5 @@
-use crate::core::harness::Harness;
-use crate::core::registry::RegistrySource;
+use crate::harness::Harness;
+use crate::registry::RegistrySource;
 use base64::Engine;
 use base64::engine::general_purpose::STANDARD;
 use color_eyre::eyre::{Context, ContextCompat, Result, bail};
