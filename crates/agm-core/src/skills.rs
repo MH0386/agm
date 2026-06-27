@@ -93,34 +93,67 @@ pub async fn fetch_skill(
             path
         );
     }
-    debug!("GitHub item: {:?}", item);
 
     let encoded = item
         .content
         .as_deref()
         .context("No content field in GitHub response")?;
-    // GitHub inserts newlines into base64 content; strip before decoding
-    let cleaned: String = encoded.chars().filter(|c| !c.is_whitespace()).collect();
-    let bytes = STANDARD
-        .decode(&cleaned)
-        .context("Failed to decode base64 content")?;
-    // Extract skill name from path, handling edge cases
-    let name = item
-        .path
-        .trim_end_matches("/SKILL.md")
-        .rsplit('/')
-        .next()
-        .filter(|s| !s.is_empty())
-        .map(|s| s.to_string())
-        .context("Could not extract skill name from path (empty name after trimming)")?;
+    let bytes = decode_github_content(item.encoding.as_deref(), encoded, path)?;
+
+    // Extract and validate the skill name from the path (defense-in-depth: the
+    // name is derived from the API response, not a trusted local input).
+    let name = extract_skill_name(&item.path)?;
+    validate_skill_name(&name)?;
+
+    let size = usize::try_from(item.size)
+        .with_context(|| format!("GitHub returned an invalid (negative) size for `{}`", path))?;
 
     Ok(SkillContent {
         name,
         content: String::from_utf8(bytes).context("File content is not valid UTF-8")?,
         sha: item.sha.clone(),
         encoding: item.encoding.clone(),
-        size: item.size as usize,
+        size,
     })
+}
+
+/// Decodes GitHub Contents API file content.
+///
+/// The Contents API only inlines content for files up to ~1 MB, using base64
+/// encoding. Larger files are returned with `encoding: "none"` and empty
+/// content, which would otherwise decode silently into an empty skill. This
+/// guards against that by requiring an explicit `base64` encoding.
+fn decode_github_content(encoding: Option<&str>, content: &str, path: &str) -> Result<Vec<u8>> {
+    match encoding {
+        Some("base64") => {
+            // GitHub inserts newlines into base64 content; strip before decoding.
+            let cleaned: String = content.chars().filter(|c| !c.is_whitespace()).collect();
+            STANDARD
+                .decode(&cleaned)
+                .context("Failed to decode base64 content")
+        }
+        Some(other) => bail!(
+            "Unsupported content encoding `{}` for `{}` (the file may exceed GitHub's inline content size limit)",
+            other,
+            path
+        ),
+        None => bail!("Missing content encoding for `{}`", path),
+    }
+}
+
+/// Extracts the skill name from a `.../{skill_name}/SKILL.md` path.
+///
+/// Strips a single trailing `/SKILL.md` segment (unlike `trim_end_matches`,
+/// which would repeatedly strip the pattern) and returns the final path
+/// component.
+fn extract_skill_name(path: &str) -> Result<String> {
+    path.strip_suffix("/SKILL.md")
+        .unwrap_or(path)
+        .rsplit('/')
+        .next()
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+        .context("Could not extract skill name from path (empty name after trimming)")
 }
 
 /// Installs a skill into the project-local skills directory for the given harness.
@@ -136,6 +169,8 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
         harness
     );
 
+    // Validate before joining onto a filesystem path to prevent traversal,
+    // regardless of how the `SkillContent` was constructed.
     validate_skill_name(&skill.name)?;
 
     let skill_dir = Path::new(&harness.project_skills_dir()).join(&skill.name);
@@ -191,5 +226,61 @@ pub async fn add_skill(source: RegistrySource, skill_name: &str) -> Result<()> {
             auto_install_skill(&skill).await?;
             Ok(())
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn decodes_base64_content_stripping_whitespace() {
+        // "hello" base64-encoded, with GitHub-style embedded newlines.
+        let bytes = decode_github_content(Some("base64"), "aGVs\nbG8=\n", "skills/x/SKILL.md")
+            .expect("should decode");
+        assert_eq!(bytes, b"hello");
+    }
+
+    #[test]
+    fn rejects_non_base64_encoding() {
+        // Large files come back with `encoding: "none"` and empty content;
+        // this must error instead of silently producing an empty skill.
+        let err = decode_github_content(Some("none"), "", "skills/x/SKILL.md")
+            .expect_err("non-base64 encoding should error");
+        assert!(err.to_string().contains("Unsupported content encoding"));
+    }
+
+    #[test]
+    fn rejects_missing_encoding() {
+        assert!(decode_github_content(None, "", "skills/x/SKILL.md").is_err());
+    }
+
+    #[test]
+    fn extracts_skill_name_from_path() {
+        assert_eq!(
+            extract_skill_name("skills/my-skill/SKILL.md").unwrap(),
+            "my-skill"
+        );
+    }
+
+    #[test]
+    fn extracts_skill_name_strips_only_one_suffix() {
+        // `trim_end_matches` would strip both segments; `strip_suffix` strips one.
+        assert_eq!(
+            extract_skill_name("skills/SKILL.md/SKILL.md").unwrap(),
+            "SKILL.md"
+        );
+    }
+
+    #[test]
+    fn extract_skill_name_rejects_empty_component() {
+        assert!(extract_skill_name("/SKILL.md").is_err());
+    }
+
+    #[test]
+    fn validate_skill_name_rejects_traversal() {
+        assert!(validate_skill_name("..").is_err());
+        assert!(validate_skill_name("a/b").is_err());
+        assert!(validate_skill_name("ok-name").is_ok());
     }
 }
