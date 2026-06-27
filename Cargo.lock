@@ -21,18 +21,27 @@ checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 name = "agm"
 version = "0.0.1"
 dependencies = [
+ "agm-core",
  "assert_cmd",
- "base64",
  "clap",
+ "color-eyre",
+ "predicates",
+ "tokio",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "agm-core"
+version = "0.0.1"
+dependencies = [
+ "base64",
  "color-eyre",
  "dirs",
  "octocrab",
- "predicates",
  "serde",
  "serde_json",
  "tokio",
  "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

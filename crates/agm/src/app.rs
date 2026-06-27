@@ -1,7 +1,7 @@
-use crate::cli::args::{Cli, Commands, McpAction, SkillAction};
-use crate::core::config::{AgmConfig, init_config};
-use crate::core::registry::parse_source;
-use crate::core::skills::add_skill;
+use crate::args::{Cli, Commands, McpAction, SkillAction};
+use agm_core::config::{AgmConfig, init_config};
+use agm_core::registry::parse_source;
+use agm_core::skills::add_skill;
 use color_eyre::eyre::{Result, bail};
 
 /// Executes the parsed CLI command.

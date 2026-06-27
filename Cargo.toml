@@ -1,9 +1,13 @@
-[package]
-name = "agm"
+[workspace]
+resolver = "3"
+members = ["crates/agm", "crates/agm-core"]
+
+[workspace.package]
 version = "0.0.1"
 edition = "2024"
 
-[dependencies]
+[workspace.dependencies]
+agm-core = { path = "crates/agm-core" }
 base64 = "0.22"
 clap = { version = "4.5", features = ["derive"] }
 color-eyre = "0.6"
@@ -14,7 +18,5 @@ serde_json = "1.0"
 tokio = { version = "1", features = ["fs", "macros", "rt-multi-thread"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
-
-[dev-dependencies]
 assert_cmd = "2.2.2"
 predicates = "3.1.4"
