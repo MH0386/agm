@@ -34,10 +34,8 @@ dependencies = [
 name = "agm-core"
 version = "0.0.1"
 dependencies = [
- "base64",
  "color-eyre",
  "dirs",
- "octocrab",
  "serde",
  "serde_json",
  "tokio",
