@@ -1,5 +1,6 @@
 [tools]
 rust = "stable"
+entire = "latest"
 
 [env]
 RUST_LOG = "debug"
