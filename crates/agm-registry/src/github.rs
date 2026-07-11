@@ -12,6 +12,7 @@ pub struct GitHubRegistry {
 
 impl Registry for GitHubRegistry {
     async fn fetch_skill(&self, skill_name: &str) -> Result<SkillContent> {
+        validate_skill_name(skill_name)?;
         let path = format!("skills/{}/SKILL.md", skill_name);
         let github = octocrab::instance();
 
