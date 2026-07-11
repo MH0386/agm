@@ -3,3 +3,6 @@ rust = "stable"
 
 [env]
 RUST_LOG = "debug"
+
+[settings]
+minimum_release_age = "0d"
