@@ -74,4 +74,56 @@ mod tests {
         assert_eq!(skill.name, "test-skill");
         assert_eq!(skill.content, "# Test Skill\n");
     }
+
+    #[test]
+    fn parse_source_rejects_empty_input() {
+        assert!(parse_source("").is_err());
+    }
+
+    #[test]
+    fn parse_source_accepts_github_shorthand() {
+        let source = parse_source("github:owner/repo").expect("source should parse");
+
+        assert!(matches!(
+            source,
+            RegistrySource::GitHub { owner, repo }
+                if owner == "owner" && repo == "repo"
+        ));
+    }
+
+    #[test]
+    fn parse_source_accepts_https_url() {
+        let source = parse_source("https://github.com/owner/repo").expect("source should parse");
+
+        assert!(matches!(
+            source,
+            RegistrySource::GitHub { owner, repo }
+                if owner == "owner" && repo == "repo"
+        ));
+    }
+
+    #[test]
+    fn parse_source_accepts_trailing_slash() {
+        let source = parse_source("github:owner/repo/").expect("source should parse");
+
+        assert!(matches!(
+            source,
+            RegistrySource::GitHub { owner, repo }
+                if owner == "owner" && repo == "repo"
+        ));
+    }
+
+    #[test]
+    fn parse_source_rejects_invalid_formats() {
+        for source in [
+            "owner/repo",
+            "github:owner",
+            "github:/repo",
+            "github:owner/",
+            "github:owner/repo/extra",
+            "https://gitlab.com/owner/repo",
+        ] {
+            assert!(parse_source(source).is_err(), "{source} should be invalid");
+        }
+    }
 }
