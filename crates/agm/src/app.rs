@@ -15,7 +15,11 @@ pub async fn run(cli: Cli) -> Result<()> {
         }) => todo!(),
         Some(Commands::Skill {
             action: SkillAction::Add { source, skill },
-        }) => add_skill(parse_source(&source)?, &skill).await?,
+        }) => {
+            let source = parse_source(&source)?;
+            let registry = agm_registry::registry_for(source);
+            add_skill(&registry, &skill).await?
+        }
         Some(Commands::Mcp {
             action: McpAction::List,
         }) => todo!(),
