@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "superpowers": {
+      "enabled": true
+    },
+    "composio": {
+      "enabled": true
+    }
+  }
+}
