@@ -4,8 +4,10 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+agm-config = { workspace = true }
 agm-core = { workspace = true }
 agm-registry = { workspace = true }
+agm-skills = { workspace = true }
 clap = { workspace = true }
 color-eyre = { workspace = true }
 tokio = { workspace = true }

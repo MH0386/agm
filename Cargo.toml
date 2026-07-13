@@ -1,6 +1,13 @@
 [workspace]
 resolver = "3"
-members = ["crates/agm-cli", "crates/agm-core", "crates/agm-registry"]
+members = [
+    "crates/agm-cli",
+    "crates/agm-core",
+    "crates/agm-config",
+    "crates/agm-harness",
+    "crates/agm-skills",
+    "crates/agm-registry",
+]
 
 [workspace.package]
 version = "0.0.1"
@@ -9,6 +16,9 @@ edition = "2024"
 [workspace.dependencies]
 agm-cli = { path = "crates/agm-cli" }
 agm-core = { path = "crates/agm-core" }
+agm-config = { path = "crates/agm-config" }
+agm-harness = { path = "crates/agm-harness" }
+agm-skills = { path = "crates/agm-skills" }
 agm-registry = { path = "crates/agm-registry" }
 base64 = "0.22"
 clap = { version = "4.5", features = ["derive"] }

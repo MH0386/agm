@@ -1,3 +1,4 @@
+//! AGM config file (`agm.json`) load and init.
 use color_eyre::eyre::{Result, bail};
 use serde::{Deserialize, Serialize};
 use std::fs::{File, read_to_string};

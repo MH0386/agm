@@ -1,8 +1,11 @@
 [package]
-name = "agm-core"
+name = "agm-skills"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
+agm-core = { workspace = true }
+agm-harness = { workspace = true }
 color-eyre = { workspace = true }
 tokio = { workspace = true }
+tracing = { workspace = true }

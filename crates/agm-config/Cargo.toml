@@ -1,8 +1,9 @@
 [package]
-name = "agm-core"
+name = "agm-config"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
 color-eyre = { workspace = true }
-tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
