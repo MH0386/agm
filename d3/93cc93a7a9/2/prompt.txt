@@ -1,0 +1,25 @@
+@github.rs (28-85) /using-superpowers refactor to be reliable as most as possible
+
+---
+
+C
+
+---
+
+A
+
+---
+
+B
+
+---
+
+Approach 1
+
+---
+
+ok
+
+---
+
+it is good, but drop `base64` crate and use Octocrab's decode way
