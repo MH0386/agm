@@ -1,0 +1,72 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d393cc93a7a9",
+  "session_id": "c74389cc-04b5-4e36-8156-797f7594de94",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-23T14:46:01.613843928Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 3,
+  "save_step_count": 3,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "9e9023c321a9",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 42831,
+    "cache_creation_tokens": 30993,
+    "cache_read_tokens": 110436,
+    "output_tokens": 3288,
+    "api_call_count": 3
+  },
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-23T14:46:01.605465858Z",
+    "agent_lines": 109,
+    "agent_removed": 6,
+    "human_added": 408,
+    "human_modified": 40,
+    "human_removed": 0,
+    "total_committed": 548,
+    "total_lines_changed": 620,
+    "agent_percentage": 18.548387096774192,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 9,
+      "user_lines_removed": 11,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "crates/agm-registry/src/github.rs": 9
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 11
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 9,
+      "agent_lines_removed": 11
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 164,
+      "user_lines_removed": 0,
+      "agent_lines_added": 149,
+      "agent_lines_removed": 17,
+      "user_added_per_file": {
+        "docs/superpowers/plans/2026-07-18-github-fetch-reliability.md": 106,
+        "docs/superpowers/specs/2026-07-18-github-fetch-reliability-design.md": 58
+      }
+    }
+  ]
+}
