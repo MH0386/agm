@@ -1,0 +1,77 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d393cc93a7a9",
+  "session_id": "85b7b029-d224-4d76-9516-b47201b42e89",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-23T14:46:01.550239878Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 4,
+  "save_step_count": 4,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "62a09651478e",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 81,
+    "cache_creation_tokens": 239035,
+    "cache_read_tokens": 1638919,
+    "output_tokens": 23620,
+    "api_call_count": 4
+  },
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-23T14:46:01.530623707Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 402,
+    "human_modified": 46,
+    "human_removed": 0,
+    "total_committed": 402,
+    "total_lines_changed": 505,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 313,
+      "user_lines_removed": 17,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "crates/agm-registry/src/github.rs": 149,
+        "docs/superpowers/plans/2026-07-18-github-fetch-reliability.md": 106,
+        "docs/superpowers/specs/2026-07-18-github-fetch-reliability-design.md": 58
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 17
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 313,
+      "agent_lines_removed": 17
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 313,
+      "agent_lines_removed": 17
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 313,
+      "agent_lines_removed": 17
+    }
+  ]
+}
