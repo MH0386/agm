@@ -1,4 +1,4 @@
-use agm_core::registry::Registry;
+use agm_core::registry::{GitHubOwner, GitHubRepoName, Registry};
 use agm_core::skills::{SkillContent, SkillName};
 use base64::Engine;
 use base64::engine::general_purpose::STANDARD;
@@ -6,8 +6,8 @@ use color_eyre::eyre::{Context, ContextCompat, Result, bail};
 use tracing::debug;
 
 pub struct GitHubRegistry {
-    pub owner: String,
-    pub repo: String,
+    pub owner: GitHubOwner,
+    pub repo: GitHubRepoName,
 }
 
 impl Registry for GitHubRegistry {
@@ -28,8 +28,8 @@ impl Registry for GitHubRegistry {
 /// The GitHub contents API returns base64-encoded content, which is decoded here.
 async fn fetch_from_github(
     client: &octocrab::Octocrab,
-    owner: &str,
-    repo: &str,
+    owner: &GitHubOwner,
+    repo: &GitHubRepoName,
     path: &str,
 ) -> Result<SkillContent> {
     debug!(
@@ -38,7 +38,7 @@ async fn fetch_from_github(
     );
 
     let response = client
-        .repos(owner, repo)
+        .repos(owner.as_str(), repo.as_str())
         .get_content()
         .path(path)
         .send()
