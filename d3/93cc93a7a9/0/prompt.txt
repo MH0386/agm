@@ -1,0 +1,17 @@
+good, but remove the support for large files
+
+---
+
+ok
+
+---
+
+apply
+
+---
+
+/review @crates/agm-registry/src/github.rs
+
+---
+
+bugbot

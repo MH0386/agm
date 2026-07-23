@@ -1,0 +1,109 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d393cc93a7a9",
+  "session_id": "519ed9fd-91d5-4de9-8734-d35531562201",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-23T14:46:01.462306187Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 4,
+  "save_step_count": 5,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "35ebd2df9a8f",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 156422,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1549056,
+    "output_tokens": 13205,
+    "api_call_count": 4
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-cursor-review-2026-07-22T14:13:54.093206022Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "review"
+      },
+      "source": {
+        "agent": "cursor",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "5723658aea0a",
+      "timestamp": "2026-07-22T14:13:54.093206022Z",
+      "native": {
+        "command": "/review"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/review",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 5
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-23T14:46:01.434726155Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 551,
+    "human_modified": 46,
+    "human_removed": 0,
+    "total_committed": 551,
+    "total_lines_changed": 654,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 1,
+      "agent_lines_added": 9,
+      "agent_lines_removed": 11,
+      "user_removed_per_file": {
+        "docs/superpowers/specs/2026-07-18-github-fetch-reliability-design.md": 1
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 313,
+      "user_lines_removed": 17,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "crates/agm-registry/src/github.rs": 149,
+        "docs/superpowers/plans/2026-07-18-github-fetch-reliability.md": 106,
+        "docs/superpowers/specs/2026-07-18-github-fetch-reliability-design.md": 58
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 17
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 164,
+      "user_lines_removed": 0,
+      "agent_lines_added": 149,
+      "agent_lines_removed": 17,
+      "user_added_per_file": {
+        "docs/superpowers/plans/2026-07-18-github-fetch-reliability.md": 106,
+        "docs/superpowers/specs/2026-07-18-github-fetch-reliability-design.md": 58
+      }
+    }
+  ]
+}
