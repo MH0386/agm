@@ -1,7 +1,7 @@
 //! Skill install and add flows.
 
 use agm_core::registry::Registry;
-use agm_core::skills::{SkillContent, validate_skill_name};
+use agm_core::skills::{SkillContent, SkillName};
 use agm_harness::Harness;
 use color_eyre::eyre::{Context, Result};
 use std::path::Path;
@@ -23,11 +23,7 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
         harness
     );
 
-    // Validate before joining onto a filesystem path to prevent traversal,
-    // regardless of how the `SkillContent` was constructed.
-    validate_skill_name(&skill.name)?;
-
-    let skill_dir = Path::new(&harness.project_skills_dir()).join(&skill.name);
+    let skill_dir = Path::new(&harness.project_skills_dir()).join(skill.name.as_str());
 
     // create_dir_all is idempotent and avoids TOCTOU races
     tokio::fs::create_dir_all(&skill_dir)
@@ -60,8 +56,18 @@ pub async fn auto_install_skill(skill: &SkillContent) -> Result<()> {
 }
 
 /// Downloads a specific skill from the registry and installs it locally.
-pub async fn add_skill<R: Registry>(registry: &R, skill_name: &str) -> Result<()> {
-    validate_skill_name(skill_name)?;
+///
+/// Raw strings are rejected so callers cannot bypass `SkillName` validation:
+///
+/// ```compile_fail
+/// use agm_core::registry::Registry;
+/// use agm_skills::add_skill;
+///
+/// async fn add_raw_name<R: Registry>(registry: &R) {
+///     add_skill(registry, "raw-name").await.unwrap();
+/// }
+/// ```
+pub async fn add_skill<R: Registry>(registry: &R, skill_name: &SkillName) -> Result<()> {
     let skill = registry.fetch_skill(skill_name).await?;
     auto_install_skill(&skill).await
 }
@@ -69,7 +75,7 @@ pub async fn add_skill<R: Registry>(registry: &R, skill_name: &str) -> Result<()
 #[cfg(test)]
 mod tests {
     use super::*;
-    use agm_core::skills::{SkillContent, SkillsDir};
+    use agm_core::skills::{SkillContent, SkillName, SkillsDir};
     use agm_harness::Harness;
 
     #[tokio::test]
@@ -85,7 +91,7 @@ mod tests {
             },
         };
         let skill = SkillContent {
-            name: "test-skill".to_string(),
+            name: "test-skill".parse::<SkillName>().expect("valid skill name"),
             content: "# Test Skill\n".to_string(),
             sha: "abc123".to_string(),
             encoding: Some("utf-8".to_string()),

@@ -1,6 +1,7 @@
 use crate::args::{Cli, Commands, McpAction, SkillAction};
 use agm_config::{AgmConfig, init_config};
 use agm_core::registry::parse_source;
+use agm_core::skills::SkillName;
 use agm_skills::add_skill;
 use color_eyre::eyre::{Result, bail};
 
@@ -17,6 +18,7 @@ pub async fn run(cli: Cli) -> Result<()> {
             action: SkillAction::Add { source, skill },
         }) => {
             let source = parse_source(&source)?;
+            let skill = skill.parse::<SkillName>()?;
             let registry = agm_registry::registry_for(source);
             add_skill(&registry, &skill).await?
         }

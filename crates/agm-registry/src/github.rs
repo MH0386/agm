@@ -1,5 +1,5 @@
 use agm_core::registry::Registry;
-use agm_core::skills::{SkillContent, validate_skill_name};
+use agm_core::skills::{SkillContent, SkillName};
 use base64::Engine;
 use base64::engine::general_purpose::STANDARD;
 use color_eyre::eyre::{Context, ContextCompat, Result, bail};
@@ -11,9 +11,8 @@ pub struct GitHubRegistry {
 }
 
 impl Registry for GitHubRegistry {
-    async fn fetch_skill(&self, skill_name: &str) -> Result<SkillContent> {
-        validate_skill_name(skill_name)?;
-        let path = format!("skills/{}/SKILL.md", skill_name);
+    async fn fetch_skill(&self, skill_name: &SkillName) -> Result<SkillContent> {
+        let path = format!("skills/{skill_name}/SKILL.md");
         let github = octocrab::instance();
 
         fetch_from_github(&github, &self.owner, &self.repo, &path)
@@ -115,14 +114,15 @@ fn decode_github_content(encoding: Option<&str>, content: &str, path: &str) -> R
 /// Strips a single trailing `/SKILL.md` segment (unlike `trim_end_matches`,
 /// which would repeatedly strip the pattern) and returns the final path
 /// component.
-fn extract_skill_name(path: &str) -> Result<String> {
-    path.strip_suffix("/SKILL.md")
+fn extract_skill_name(path: &str) -> Result<SkillName> {
+    let name = path
+        .strip_suffix("/SKILL.md")
         .unwrap_or(path)
         .rsplit('/')
         .next()
         .filter(|s| !s.is_empty())
-        .map(|s| s.to_string())
-        .context("Could not extract skill name from path (empty name after trimming)")
+        .context("Could not extract skill name from path (empty name after trimming)")?;
+    name.parse()
 }
 
 #[cfg(test)]
