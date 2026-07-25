@@ -1,0 +1,13 @@
+explain why some functions' parameters have `&` in them types @crates/agm-registry/src/github.rs
+
+---
+
+what about `extract_requested_file`?
+
+---
+
+then, why item in `decode_file_content` borrow even it is not being used later?
+
+---
+
+even if i pass `&item`?
