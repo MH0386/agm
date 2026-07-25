@@ -1,0 +1,13 @@
+@crates/agm-registry/src/github.rs:16 i want to make sure if it is the only path that skills could be there at github repos?
+
+---
+
+i did not mean layouts such as `.agents/`, i mean the repos that host installable skills such as `anthropics/skills` repo.
+
+---
+
+i want to make AGM support all of these layouts
+
+---
+
+is the first method download files one by one?
