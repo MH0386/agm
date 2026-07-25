@@ -1,0 +1,97 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5a442d87653",
+  "session_id": "26aede50-c11a-4669-aa25-bd557e546965",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-25T00:08:21.042246538Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 6,
+  "save_step_count": 6,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "e0647bf929c7",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 69,
+    "cache_creation_tokens": 193313,
+    "cache_read_tokens": 1356553,
+    "output_tokens": 21589,
+    "api_call_count": 6
+  },
+  "session_metrics": {
+    "duration_ms": 2955509,
+    "turn_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-25T00:08:21.020414881Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 15,
+    "human_modified": 148,
+    "human_removed": 0,
+    "total_committed": 15,
+    "total_lines_changed": 163,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 221,
+      "user_lines_removed": 25,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "crates/agm-cli/tests/cli.rs": 60,
+        "crates/agm-registry/src/github.rs": 161
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 25
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 221,
+      "agent_lines_removed": 25
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 221,
+      "agent_lines_removed": 25
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 221,
+      "agent_lines_removed": 25
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 163,
+      "user_lines_removed": 123,
+      "agent_lines_added": 221,
+      "agent_lines_removed": 25,
+      "user_added_per_file": {
+        "crates/agm-registry/src/github.rs": 163
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 123
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 317,
+      "agent_lines_removed": 81
+    }
+  ]
+}

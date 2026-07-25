@@ -1,0 +1,23 @@
+@crates/agm-registry/src/github.rs:26-119 review those 3 functions. i do not like their names. are they duplicated code?
+
+---
+
+Plan to rewrite these functions, always make functions do a single thing
+
+---
+
+Build
+
+---
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
+
+---
+
+review functions' parameters
+
+---
+
+apply Recommended signatures
