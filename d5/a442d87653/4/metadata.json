@@ -1,0 +1,57 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d5a442d87653",
+  "session_id": "e8218e9d-622d-4d4a-96f0-f8cbbaa43ee3",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-25T00:08:21.17341033Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "b285f937a8fc",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 3,
+    "cache_creation_tokens": 30058,
+    "cache_read_tokens": 0,
+    "output_tokens": 1212,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "duration_ms": 876494,
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-25T00:08:21.166956985Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 99,
+    "total_committed": 1,
+    "total_lines_changed": 99,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 328,
+      "user_lines_removed": 99,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "crates/agm-cli/tests/cli.rs": 60,
+        "crates/agm-registry/src/github.rs": 265,
+        "mise.toml": 3
+      },
+      "user_removed_per_file": {
+        "crates/agm-registry/src/github.rs": 99
+      }
+    }
+  ]
+}

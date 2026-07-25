@@ -3,7 +3,7 @@
   "checkpoint_id": "d5a442d87653",
   "strategy": "manual-commit",
   "branch": "add-github-support",
-  "checkpoints_count": 15,
+  "checkpoints_count": 16,
   "files_touched": [
     "crates/agm-registry/src/github.rs"
   ],
@@ -35,13 +35,20 @@
       "compact_transcript": "/d5/a442d87653/3/transcript.jsonl",
       "content_hash": "/d5/a442d87653/3/content_hash.txt",
       "prompt": "/d5/a442d87653/3/prompt.txt"
+    },
+    {
+      "metadata": "/d5/a442d87653/4/metadata.json",
+      "transcript": "/d5/a442d87653/4/full.jsonl",
+      "compact_transcript": "/d5/a442d87653/4/transcript.jsonl",
+      "content_hash": "/d5/a442d87653/4/content_hash.txt",
+      "prompt": "/d5/a442d87653/4/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 195,
-    "cache_creation_tokens": 423080,
+    "input_tokens": 198,
+    "cache_creation_tokens": 453138,
     "cache_read_tokens": 4307087,
-    "output_tokens": 47482,
-    "api_call_count": 14
+    "output_tokens": 48694,
+    "api_call_count": 15
   }
 }
