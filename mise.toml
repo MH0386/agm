@@ -1,6 +1,7 @@
 [tools]
 rust = "stable"
 entire = "latest"
+tombi = "latest"
 
 [env]
 RUST_LOG = "debug"
