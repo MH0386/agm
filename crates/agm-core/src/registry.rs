@@ -1,4 +1,4 @@
-use crate::skills::{SkillContent, SkillName};
+use crate::skills::{SkillName, SkillPackage};
 use color_eyre::eyre::{Report, Result, bail};
 use std::{fmt, str::FromStr};
 
@@ -98,7 +98,7 @@ pub enum RegistrySource {
 
 #[allow(async_fn_in_trait)]
 pub trait Registry {
-    async fn fetch_skill(&self, skill_name: &SkillName) -> Result<SkillContent>;
+    async fn fetch_skill(&self, skill_name: &SkillName) -> Result<SkillPackage>;
 }
 
 /// Parses a source string like `github:owner/repo` or `https://github.com/owner/repo` into a `RegistrySource`.
@@ -137,7 +137,8 @@ pub fn parse_source(input: &str) -> Result<RegistrySource> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::skills::{SkillContent, SkillName};
+    use crate::skills::{SkillFile, SkillName, SkillPackage};
+    use std::path::PathBuf;
 
     #[test]
     fn github_owner_accepts_standard_boundaries_and_preserves_case() {
@@ -254,27 +255,30 @@ mod tests {
     struct StaticRegistry;
 
     impl Registry for StaticRegistry {
-        async fn fetch_skill(&self, skill_name: &SkillName) -> Result<SkillContent> {
-            Ok(SkillContent {
+        async fn fetch_skill(&self, skill_name: &SkillName) -> Result<SkillPackage> {
+            Ok(SkillPackage {
                 name: skill_name.clone(),
-                content: "# Test Skill\n".to_string(),
-                sha: "abc123".to_string(),
-                encoding: Some("utf-8".to_string()),
-                size: 13,
+                revision: "abc123".to_string(),
+                files: vec![SkillFile {
+                    relative_path: PathBuf::from("SKILL.md"),
+                    bytes: b"# Test Skill\n".to_vec(),
+                    executable: false,
+                }],
             })
         }
     }
 
     #[tokio::test]
-    async fn registry_trait_fetches_skill_content() {
+    async fn registry_trait_fetches_skill_package() {
         let name = "test-skill".parse::<SkillName>().expect("valid skill name");
         let skill = StaticRegistry
             .fetch_skill(&name)
             .await
-            .expect("registry should fetch skill content");
+            .expect("registry should fetch skill package");
 
         assert_eq!(skill.name.as_str(), "test-skill");
-        assert_eq!(skill.content, "# Test Skill\n");
+        assert_eq!(skill.revision, "abc123");
+        assert_eq!(skill.files[0].bytes, b"# Test Skill\n");
     }
 
     #[test]

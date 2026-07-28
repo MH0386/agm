@@ -1,9 +1,13 @@
 [tools]
 rust = "stable"
 entire = "latest"
+"npm:openwiki" = "latest"
 
 [env]
 RUST_LOG = "debug"
 
 [settings]
 minimum_release_age = "0d"
+
+[tasks.test]
+run = "cargo test"

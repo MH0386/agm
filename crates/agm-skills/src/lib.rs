@@ -1,9 +1,9 @@
 //! Skill install and add flows.
 
 use agm_core::registry::Registry;
-use agm_core::skills::{SkillContent, SkillName};
+use agm_core::skills::{SkillName, SkillPackage};
 use agm_harness::Harness;
-use color_eyre::eyre::{Context, Result};
+use color_eyre::eyre::{Context, ContextCompat, Result};
 use std::path::Path;
 use tracing::info;
 
@@ -15,7 +15,7 @@ pub const SKILL_FILE_NAME: &str = "SKILL.md";
 /// The caller is responsible for detecting the harness (typically via
 /// `Harness::detect()`). Skill files follow the agentskills.io standard:
 /// `{skills_dir}/{skill_name}/SKILL.md`.
-pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Result<()> {
+pub async fn install_to_harness(harness: &Harness, skill: &SkillPackage) -> Result<()> {
     info!(
         "Installing `{}` skill to {} for {} harness",
         skill.name,
@@ -23,6 +23,12 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
         harness
     );
 
+    skill.validate()?;
+    let package_skill_file = skill
+        .files
+        .iter()
+        .find(|file| file.relative_path == Path::new(SKILL_FILE_NAME))
+        .context("Validated package did not contain root SKILL.md")?;
     let skill_dir = Path::new(&harness.project_skills_dir()).join(skill.name.as_str());
 
     // create_dir_all is idempotent and avoids TOCTOU races
@@ -32,7 +38,7 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
 
     let skill_file = skill_dir.join(SKILL_FILE_NAME);
 
-    tokio::fs::write(&skill_file, &skill.content)
+    tokio::fs::write(&skill_file, &package_skill_file.bytes)
         .await
         .with_context(|| format!("Failed to write skill file: {}", skill_file.display()))?;
 
@@ -49,7 +55,7 @@ pub async fn install_to_harness(harness: &Harness, skill: &SkillContent) -> Resu
 ///
 /// Detects the active harness from the current working directory and writes
 /// the skill to the appropriate location following the agentskills.io standard.
-pub async fn auto_install_skill(skill: &SkillContent) -> Result<()> {
+pub async fn auto_install_skill(skill: &SkillPackage) -> Result<()> {
     let harness: Harness = Harness::detect()?;
     info!("Detected harness: {}", harness);
     install_to_harness(&harness, skill).await
@@ -75,8 +81,9 @@ pub async fn add_skill<R: Registry>(registry: &R, skill_name: &SkillName) -> Res
 #[cfg(test)]
 mod tests {
     use super::*;
-    use agm_core::skills::{SkillContent, SkillName, SkillsDir};
+    use agm_core::skills::{SkillFile, SkillName, SkillPackage, SkillsDir};
     use agm_harness::Harness;
+    use std::path::PathBuf;
 
     #[tokio::test]
     async fn install_to_harness_writes_skill_file() {
@@ -90,12 +97,14 @@ mod tests {
                 global: project_dir.join("global"),
             },
         };
-        let skill = SkillContent {
+        let skill = SkillPackage {
             name: "test-skill".parse::<SkillName>().expect("valid skill name"),
-            content: "# Test Skill\n".to_string(),
-            sha: "abc123".to_string(),
-            encoding: Some("utf-8".to_string()),
-            size: 13,
+            revision: "abc123".to_string(),
+            files: vec![SkillFile {
+                relative_path: PathBuf::from("SKILL.md"),
+                bytes: b"# Test Skill\n".to_vec(),
+                executable: false,
+            }],
         };
 
         install_to_harness(&harness, &skill)
