@@ -3,7 +3,7 @@
   "checkpoint_id": "2ba8ad19581e",
   "strategy": "manual-commit",
   "branch": "add-github-support",
-  "checkpoints_count": 10,
+  "checkpoints_count": 14,
   "files_touched": [
     "mise.toml"
   ],
@@ -21,6 +21,13 @@
       "compact_transcript": "/2b/a8ad19581e/1/transcript.jsonl",
       "content_hash": "/2b/a8ad19581e/1/content_hash.txt",
       "prompt": "/2b/a8ad19581e/1/prompt.txt"
+    },
+    {
+      "metadata": "/2b/a8ad19581e/2/metadata.json",
+      "transcript": "/2b/a8ad19581e/2/full.jsonl",
+      "compact_transcript": "/2b/a8ad19581e/2/transcript.jsonl",
+      "content_hash": "/2b/a8ad19581e/2/content_hash.txt",
+      "prompt": "/2b/a8ad19581e/2/prompt.txt"
     }
   ],
   "token_usage": {
