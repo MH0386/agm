@@ -1,8 +1,5 @@
-mod cli;
-mod core;
-
-use crate::cli::app::run;
-use crate::cli::args::Cli;
+use agm::cli::app::run;
+use agm::cli::args::Cli;
 use clap::Parser;
 use std::process::ExitCode;
 
