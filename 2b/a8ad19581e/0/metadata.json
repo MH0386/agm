@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2ba8ad19581e",
+  "session_id": "6f2b8796-1a52-4044-ad9b-ad623f8dcdd5",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-28T14:40:16.61310297Z",
+  "branch": "add-github-support",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "mise.toml"
+  ],
+  "agent": "Cursor",
+  "model": "gpt-5.6-sol-max",
+  "turn_id": "bae233633e17",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-28T14:40:16.590107681Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 1,
+    "human_removed": 3,
+    "total_committed": 1,
+    "total_lines_changed": 4,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
