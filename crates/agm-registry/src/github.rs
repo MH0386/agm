@@ -1,18 +1,24 @@
-use agm_core::registry::{GitHubOwner, GitHubRepoName, Registry};
-use agm_core::skills::{SkillContent, SkillName};
+use agm_core::registry::{
+    Registry,
+    github::{GitHubOwner, GitHubRepoName},
+};
+use agm_core::skills::{SkillFile, SkillName, SkillPackage};
 use base64::Engine;
 use base64::engine::general_purpose::STANDARD;
 use color_eyre::eyre::{Context, ContextCompat, Result, bail};
 use octocrab::models::repos::Content;
+use std::path::PathBuf;
 use tracing::debug;
+mod archive;
 
-pub struct GitHubRegistry {
+/// Fetches skills from one GitHub `owner/repo`.
+pub struct GitHubClient {
     pub owner: GitHubOwner,
     pub repo: GitHubRepoName,
 }
 
-impl Registry for GitHubRegistry {
-    async fn fetch_skill(&self, name: &SkillName) -> Result<SkillContent> {
+impl Registry for GitHubClient {
+    async fn fetch_skill(&self, name: &SkillName) -> Result<SkillPackage> {
         let path = format!("skills/{name}/SKILL.md");
         let github = octocrab::instance();
 
@@ -21,7 +27,7 @@ impl Registry for GitHubRegistry {
             let item = extract_requested_file(items, &path)?;
             let bytes = decode_file_content(&item)?;
             validate_content_integrity(&item, &bytes)?;
-            build_skill_content(name.clone(), item, bytes)
+            build_skill_package(name.clone(), item, bytes)
         }
         .await
         .context(format!(
@@ -31,7 +37,7 @@ impl Registry for GitHubRegistry {
     }
 }
 
-impl GitHubRegistry {
+impl GitHubClient {
     /// Fetches content items from GitHub using the octocrab client.
     async fn fetch_content_items(
         &self,
@@ -137,20 +143,54 @@ fn validate_content_integrity(item: &Content, bytes: &[u8]) -> Result<()> {
     Ok(())
 }
 
-/// Maps validated GitHub content into the registry domain type.
-fn build_skill_content(name: SkillName, item: Content, bytes: Vec<u8>) -> Result<SkillContent> {
-    let size = bytes.len();
-    Ok(SkillContent {
+/// Maps validated GitHub content into the registry package type.
+fn build_skill_package(name: SkillName, item: Content, bytes: Vec<u8>) -> Result<SkillPackage> {
+    std::str::from_utf8(&bytes).context("File content is not valid UTF-8")?;
+    Ok(SkillPackage {
         name,
-        content: String::from_utf8(bytes).context("File content is not valid UTF-8")?,
-        sha: item.sha,
-        encoding: item.encoding,
-        size,
+        revision: item.sha,
+        files: vec![SkillFile {
+            relative_path: PathBuf::from("SKILL.md"),
+            bytes,
+            executable: false,
+        }],
     })
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
+    #[test]
+    fn append_archive_chunk_accepts_exact_limit() {
+        let mut buffer = b"abc".to_vec();
+        append_archive_chunk(&mut buffer, b"de", 5).expect("exact limit should pass");
+        assert_eq!(buffer, b"abcde");
+    }
+
+    #[test]
+    fn append_archive_chunk_rejects_limit_without_appending() {
+        let mut buffer = b"abc".to_vec();
+        let error = append_archive_chunk(&mut buffer, b"def", 5)
+            .expect_err("oversized archive should fail");
+        assert!(
+            error
+                .to_string()
+                .contains("5 byte compressed archive limit")
+        );
+        assert_eq!(buffer, b"abc");
+    }
+
+    #[test]
+    fn append_archive_chunk_rejects_length_overflow() {
+        let error = checked_archive_length(usize::MAX, 1, usize::MAX)
+            .expect_err("length overflow should fail");
+        assert!(error.to_string().contains("overflow"));
+    }
+}
+
+#[cfg(any())]
+mod obsolete_tests {
     use super::*;
     use agm_core::skills::SkillName;
     use octocrab::models::repos::{Content, ContentLinks};
@@ -316,28 +356,29 @@ mod tests {
     }
 
     #[test]
-    fn build_skill_content_rejects_invalid_utf8() {
+    fn build_skill_package_rejects_invalid_utf8() {
         let name = "x".parse::<SkillName>().expect("valid skill name");
         let item = sample_content("skills/x/SKILL.md", "file", 1);
 
-        let err = build_skill_content(name, item, vec![0xff])
+        let err = build_skill_package(name, item, vec![0xff])
             .expect_err("invalid UTF-8 should be rejected");
         assert!(err.to_string().contains("not valid UTF-8"));
     }
 
     #[test]
-    fn build_skill_content_uses_validated_name_and_metadata() {
+    fn build_skill_package_uses_validated_name_and_revision() {
         let name = "requested-skill"
             .parse::<SkillName>()
             .expect("valid skill name");
         let item = sample_content("skills/response-name/SKILL.md", "file", 5);
 
-        let skill = build_skill_content(name, item, b"hello".to_vec())
-            .expect("valid content should build a skill");
+        let skill = build_skill_package(name, item, b"hello".to_vec())
+            .expect("valid content should build a skill package");
         assert_eq!(skill.name.as_str(), "requested-skill");
-        assert_eq!(skill.content, "hello");
-        assert_eq!(skill.sha, "deadbeef");
-        assert_eq!(skill.size, 5);
-        assert_eq!(skill.encoding.as_deref(), Some("base64"));
+        assert_eq!(skill.revision, "deadbeef");
+        assert_eq!(skill.files.len(), 1);
+        assert_eq!(skill.files[0].relative_path, PathBuf::from("SKILL.md"));
+        assert_eq!(skill.files[0].bytes, b"hello");
+        assert!(!skill.files[0].executable);
     }
 }

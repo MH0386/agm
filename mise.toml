@@ -2,9 +2,13 @@
 rust = "stable"
 entire = "latest"
 tombi = "latest"
+"npm:openwiki" = "latest"
 
 [env]
 RUST_LOG = "debug"
 
 [settings]
 minimum_release_age = "0d"
+
+[tasks.test]
+run = "cargo test"
