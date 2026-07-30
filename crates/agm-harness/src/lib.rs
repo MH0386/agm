@@ -1,6 +1,6 @@
 //! Harness detection and skills directory paths.
 
-use agm_core::skills::SkillsDir;
+use agm_core::harness::SkillsDir;
 use color_eyre::eyre::{Context, ContextCompat, Result};
 use dirs;
 use std::env;

@@ -1,12 +1,12 @@
 [workspace]
 resolver = "3"
 members = [
-    "crates/agm-cli",
-    "crates/agm-core",
-    "crates/agm-config",
-    "crates/agm-harness",
-    "crates/agm-skills",
-    "crates/agm-registry",
+  "crates/agm-cli",
+  "crates/agm-config",
+  "crates/agm-core",
+  "crates/agm-harness",
+  "crates/agm-registry",
+  "crates/agm-skills",
 ]
 
 [workspace.package]
@@ -15,20 +15,28 @@ edition = "2024"
 
 [workspace.dependencies]
 agm-cli = { path = "crates/agm-cli" }
-agm-core = { path = "crates/agm-core" }
 agm-config = { path = "crates/agm-config" }
+agm-core = { path = "crates/agm-core" }
 agm-harness = { path = "crates/agm-harness" }
-agm-skills = { path = "crates/agm-skills" }
 agm-registry = { path = "crates/agm-registry" }
-base64 = "0.22"
+agm-skills = { path = "crates/agm-skills" }
+assert_cmd = "2.2.2"
+bytes = "1"
 clap = { version = "4.5", features = ["derive"] }
 color-eyre = "0.6"
 dirs = "6"
+flate2 = "1.1.9"
+http-body-util = "0.1.4"
 octocrab = "0.43"
+predicates = "3.1.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tokio = { version = "1", features = ["fs", "macros", "rt-multi-thread"] }
+tar = "0.4.46"
+tempfile = "3.27.0"
+tokio = {
+  version = "1",
+  features = ["fs", "io-util", "macros", "rt-multi-thread"]
+}
 tracing = "0.1"
 tracing-subscriber = "0.3"
-assert_cmd = "2.2.2"
-predicates = "3.1.4"
+yaml_serde = "0.10.4"

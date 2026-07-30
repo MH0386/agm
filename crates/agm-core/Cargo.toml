@@ -6,3 +6,5 @@ edition.workspace = true
 [dependencies]
 color-eyre = { workspace = true }
 tokio = { workspace = true }
+serde = { workspace = true }
+yaml_serde = { workspace = true }

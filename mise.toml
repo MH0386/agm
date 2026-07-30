@@ -6,7 +6,7 @@ tombi = "latest"
 prek = "latest"
 
 [env]
-RUST_LOG = "debug"
+# RUST_LOG = "debug"
 
 [settings]
 minimum_release_age = "0d"
