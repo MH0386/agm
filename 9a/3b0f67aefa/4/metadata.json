@@ -1,0 +1,110 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "9a3b0f67aefa",
+  "session_id": "aa567cfa-8c05-4763-8e76-54f7bc7b442a",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-31T13:18:12.802839538Z",
+  "branch": "cursor/cloud-agent-1785451375605-axowc",
+  "checkpoints_count": 5,
+  "save_step_count": 5,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs",
+    "crates/agm-registry/src/github/archive.rs",
+    "crates/agm-registry/src/lib.rs"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "5025521e0f22",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 138182,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 509056,
+    "output_tokens": 3603,
+    "api_call_count": 5
+  },
+  "session_metrics": {
+    "duration_ms": 72306721,
+    "turn_count": 5
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-31T13:18:12.771187594Z",
+    "agent_lines": 0,
+    "agent_removed": 3,
+    "human_added": 67,
+    "human_modified": 1180,
+    "human_removed": 0,
+    "total_committed": 71,
+    "total_lines_changed": 1250,
+    "agent_percentage": 0.24,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1994,
+      "user_lines_removed": 432,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "Cargo.lock": 173,
+        "Cargo.toml": 5,
+        "crates/agm-cli/tests/cli.rs": 60,
+        "crates/agm-core/src/registry/github.rs": 87,
+        "crates/agm-core/src/registry/mod.rs": 308,
+        "crates/agm-core/src/skills.rs": 120,
+        "crates/agm-registry/Cargo.toml": 5,
+        "crates/agm-registry/src/github.rs": 55,
+        "crates/agm-registry/src/github/archive.rs": 1156,
+        "crates/agm-skills/Cargo.toml": 1,
+        "crates/agm-skills/src/lib.rs": 20,
+        "mise.toml": 4
+      },
+      "user_removed_per_file": {
+        "Cargo.lock": 4,
+        "crates/agm-core/src/registry.rs": 388,
+        "crates/agm-core/src/skills.rs": 8,
+        "crates/agm-registry/src/github.rs": 21,
+        "crates/agm-skills/src/lib.rs": 11
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 13,
+      "user_lines_removed": 6,
+      "agent_lines_added": 1994,
+      "agent_lines_removed": 432,
+      "user_added_per_file": {
+        "crates/agm-core/src/registry/github.rs": 3,
+        "crates/agm-core/src/registry/mod.rs": 1,
+        "crates/agm-registry/src/github.rs": 9
+      },
+      "user_removed_per_file": {
+        "crates/agm-core/src/registry/github.rs": 3,
+        "crates/agm-core/src/registry/mod.rs": 1,
+        "crates/agm-registry/src/github.rs": 2
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2001,
+      "agent_lines_removed": 432
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2011,
+      "agent_lines_removed": 437
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2008,
+      "agent_lines_removed": 437
+    }
+  ]
+}

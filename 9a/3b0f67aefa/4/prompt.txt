@@ -1,0 +1,17 @@
+@crates/agm-core/src/registry/mod.rs:6-14 @crates/agm-registry/src/github.rs:12-15 Should we combine them?
+
+---
+
+then, i feel that @crates/agm-registry/src/github.rs:15 should be renamed
+
+---
+
+ok
+
+---
+
+@crates/agm-registry/src/github.rs:15-18 simplify and clearify
+
+---
+
+@crates/agm-registry/src/lib.rs:7 same here
