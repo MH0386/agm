@@ -9,7 +9,6 @@ use color_eyre::eyre::{Context, ContextCompat, Result, bail};
 use octocrab::models::repos::Content;
 use std::path::PathBuf;
 use tracing::debug;
-mod archive;
 
 /// Fetches skills from one GitHub `owner/repo`.
 pub struct GitHubClient {
@@ -155,6 +154,27 @@ fn build_skill_package(name: SkillName, item: Content, bytes: Vec<u8>) -> Result
             executable: false,
         }],
     })
+}
+
+// ponytail: helpers land ahead of tarball streaming so their unit tests compile.
+#[allow(dead_code)]
+/// Computes the next compressed-archive length with overflow and ceiling checks.
+fn checked_archive_length(current: usize, increment: usize, limit: usize) -> Result<usize> {
+    let total = current
+        .checked_add(increment)
+        .context("Compressed archive length overflow")?;
+    if total > limit {
+        bail!("{limit} byte compressed archive limit exceeded");
+    }
+    Ok(total)
+}
+
+#[allow(dead_code)]
+/// Appends one response chunk without mutating the buffer when the limit would be exceeded.
+fn append_archive_chunk(buffer: &mut Vec<u8>, chunk: &[u8], limit: usize) -> Result<()> {
+    checked_archive_length(buffer.len(), chunk.len(), limit)?;
+    buffer.extend_from_slice(chunk);
+    Ok(())
 }
 
 #[cfg(test)]

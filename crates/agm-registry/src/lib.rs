@@ -1,3 +1,6 @@
+//! Registry clients that fetch skills from remote sources.
+
+pub mod archive;
 pub mod github;
 
 use agm_core::registry::{Registry, RegistrySource};
