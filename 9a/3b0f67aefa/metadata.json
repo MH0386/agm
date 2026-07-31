@@ -3,7 +3,7 @@
   "checkpoint_id": "9a3b0f67aefa",
   "strategy": "manual-commit",
   "branch": "cursor/cloud-agent-1785451375605-axowc",
-  "checkpoints_count": 13,
+  "checkpoints_count": 16,
   "files_touched": [
     "crates/agm-registry/src/github.rs",
     "crates/agm-registry/src/github/archive.rs",
@@ -44,13 +44,20 @@
       "compact_transcript": "/9a/3b0f67aefa/4/transcript.jsonl",
       "content_hash": "/9a/3b0f67aefa/4/content_hash.txt",
       "prompt": "/9a/3b0f67aefa/4/prompt.txt"
+    },
+    {
+      "metadata": "/9a/3b0f67aefa/5/metadata.json",
+      "transcript": "/9a/3b0f67aefa/5/full.jsonl",
+      "compact_transcript": "/9a/3b0f67aefa/5/transcript.jsonl",
+      "content_hash": "/9a/3b0f67aefa/5/content_hash.txt",
+      "prompt": "/9a/3b0f67aefa/5/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 348561,
+    "input_tokens": 418562,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 915072,
-    "output_tokens": 14495,
-    "api_call_count": 13
+    "cache_read_tokens": 964480,
+    "output_tokens": 16480,
+    "api_call_count": 16
   }
 }

@@ -1,0 +1,9 @@
+in best practices, @crates/agm-core/src/registry/github.rs:1-3  how should import crates? is it better to qualify import inline the code?
+
+---
+
+@crates/agm-core/src/registry/github.rs:48 what about Result? color_eyre has it too.
+
+---
+
+what should i do? i want a style rule to apply. should i Qualifying all std to prevent conflict with thirdparty crate?
