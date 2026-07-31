@@ -1,0 +1,17 @@
+@crates/agm-core/src/registry.rs:9-13 shouldnot it be at `agm-registry`?
+
+---
+
+@crates/agm-registry/src/github.rs:11-15 then why this not at core?
+
+---
+
+is it port and adaptor arch?
+
+---
+
+for core, Shouldn't we make it general like `RegistryOwner`?
+
+---
+
+i mean if add more registry, this module will be big.
