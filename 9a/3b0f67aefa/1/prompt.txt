@@ -1,0 +1,1 @@
+move all tests from @crates/agm-core/src/registry/mod.rs to @crates/agm-core/src/registry/github.rs that related to GitHub

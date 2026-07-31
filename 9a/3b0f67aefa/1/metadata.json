@@ -1,0 +1,73 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "9a3b0f67aefa",
+  "session_id": "0ae2fd77-1d00-4ec2-a581-2f511ebd53a7",
+  "strategy": "manual-commit",
+  "created_at": "2026-07-31T13:18:12.463495458Z",
+  "branch": "cursor/cloud-agent-1785451375605-axowc",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "crates/agm-registry/src/github.rs",
+    "crates/agm-registry/src/github/archive.rs",
+    "crates/agm-registry/src/lib.rs"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "3059c9994026",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 51038,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 74240,
+    "output_tokens": 3122,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-07-31T13:18:12.435731728Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 55,
+    "human_modified": 1183,
+    "human_removed": 0,
+    "total_committed": 55,
+    "total_lines_changed": 1238,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2009,
+      "user_lines_removed": 438,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "Cargo.lock": 173,
+        "Cargo.toml": 5,
+        "crates/agm-cli/tests/cli.rs": 60,
+        "crates/agm-core/src/registry/github.rs": 90,
+        "crates/agm-core/src/registry/mod.rs": 308,
+        "crates/agm-core/src/skills.rs": 119,
+        "crates/agm-registry/Cargo.toml": 5,
+        "crates/agm-registry/src/github.rs": 65,
+        "crates/agm-registry/src/github/archive.rs": 1156,
+        "crates/agm-registry/src/lib.rs": 3,
+        "crates/agm-skills/Cargo.toml": 1,
+        "crates/agm-skills/src/lib.rs": 20,
+        "mise.toml": 4
+      },
+      "user_removed_per_file": {
+        "Cargo.lock": 4,
+        "crates/agm-core/src/registry.rs": 388,
+        "crates/agm-core/src/skills.rs": 9,
+        "crates/agm-registry/src/github.rs": 24,
+        "crates/agm-registry/src/lib.rs": 2,
+        "crates/agm-skills/src/lib.rs": 11
+      }
+    }
+  ]
+}
