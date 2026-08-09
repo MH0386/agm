@@ -5,13 +5,11 @@ edition.workspace = true
 
 [dependencies]
 agm-core = { workspace = true }
-base64 = { workspace = true }
+bytes = { workspace = true }
 color-eyre = { workspace = true }
 flate2 = { workspace = true }
 http-body-util = { workspace = true }
 octocrab = { workspace = true }
-serde = { workspace = true }
 tar = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
-yaml_serde = { workspace = true }
