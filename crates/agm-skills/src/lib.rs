@@ -9,9 +9,6 @@ use tokio::fs::{OpenOptions, create_dir_all};
 use tokio::io::AsyncWriteExt;
 use tracing::{debug, info};
 
-/// Canonical skill file name per the agentskills.io standard.
-pub const SKILL_FILE_NAME: &str = "SKILL.md";
-
 /// Downloads a skill from the registry and installs it into the detected harness.
 ///
 /// Detects the active harness from the current working directory, then writes
