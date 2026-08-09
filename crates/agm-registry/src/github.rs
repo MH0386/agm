@@ -1,11 +1,11 @@
 //! GitHub registry that fetches skills from GitHub repositories.
 
-use crate::archive::parse_skill_package;
+use crate::archive::parse_skill_archive_bytes;
 use agm_core::registry::{
     Registry,
     github::{GitHubOwner, GitHubRepoName},
 };
-use agm_core::skills::{SkillName, SkillPackage};
+use agm_core::skills::SkillPackage;
 use color_eyre::eyre::{Context, ContextCompat, Result, bail};
 use http_body_util::{BodyExt, Limited};
 use octocrab::models::repos::Object::{Commit, Tag};
@@ -22,11 +22,15 @@ pub struct GitHubRegistry {
 }
 
 impl Registry for GitHubRegistry {
-    async fn fetch_skill(&self, name: &SkillName) -> Result<SkillPackage> {
+    async fn fetch_skills(&self) -> Result<Vec<SkillPackage>> {
         let github = octocrab::instance();
-        let revision = self.get_sha(&github).await?;
-        let archive_bytes = self.download_repository_tarball(&github, &revision).await?;
-        parse_skill_package(&archive_bytes, name.clone(), revision).await
+        let sha = self.get_repository_sha(&github).await?;
+        let archive_bytes = self.download_repository_tarball(&github, &sha).await?;
+        parse_skill_archive_bytes(&archive_bytes).await
+    }
+    async fn get_sha(&self) -> Result<String> {
+        let github = octocrab::instance();
+        self.get_repository_sha(&github).await
     }
 }
 
@@ -35,7 +39,7 @@ impl GitHubRegistry {
     ///
     /// look up the repo's default branch, then resolve
     /// `refs/heads/<branch>` to a commit SHA (like `git rev-parse origin/HEAD`).
-    async fn get_sha(&self, github: &Octocrab) -> Result<String> {
+    async fn get_repository_sha(&self, github: &Octocrab) -> Result<String> {
         let repo = github
             .repos(self.owner.as_str(), self.repo_name.as_str())
             .get()
@@ -58,16 +62,12 @@ impl GitHubRegistry {
         })
     }
 
-    /// Downloads the repository `.tar.gz` for `revision` with a compressed size ceiling.
-    async fn download_repository_tarball(
-        &self,
-        github: &Octocrab,
-        revision: &str,
-    ) -> Result<Vec<u8>> {
-        debug!(%revision, "Downloading repository tarball");
+    /// Downloads the repository `.tar.gz` for `sha` with a compressed size ceiling.
+    async fn download_repository_tarball(&self, github: &Octocrab, sha: &str) -> Result<Vec<u8>> {
+        debug!(%sha, "Downloading repository tarball");
         let response = github
             .repos(self.owner.as_str(), self.repo_name.as_str())
-            .download_tarball(revision.to_string())
+            .download_tarball(sha.to_string())
             .await
             .context("Failed to download repository tarball")?;
 
@@ -75,7 +75,6 @@ impl GitHubRegistry {
         if !status.is_success() {
             bail!("GitHub tarball download returned HTTP {status:?}");
         }
-
         let collected = Limited::new(response.into_body(), MAX_COMPRESSED_ARCHIVE_BYTES)
             .collect()
             .await

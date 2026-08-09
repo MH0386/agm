@@ -3,7 +3,7 @@
 use agm_core::registry::Registry;
 use agm_core::skills::SkillName;
 use agm_harness::Harness;
-use color_eyre::eyre::{Result, bail};
+use color_eyre::eyre::{Result, bail, eyre};
 use std::path::PathBuf;
 use tokio::fs::{OpenOptions, create_dir_all};
 use tokio::io::AsyncWriteExt;
@@ -14,7 +14,21 @@ use tracing::{debug, info};
 /// Detects the active harness from the current working directory, then writes
 /// the package following the agentskills.io standard.
 pub async fn add_skill<R: Registry>(registry: &R, skill_name: &SkillName) -> Result<()> {
-    let skill = registry.fetch_skill(skill_name).await?;
+    let skills = registry.fetch_skills().await?;
+    let skill = skills
+        .into_iter()
+        .find(|skill| skill.name == *skill_name)
+        .ok_or(eyre!("Skill `{}` not found", skill_name))?;
+    info!("Installing `{}` skill", skill.name);
+    debug!(
+        "Skill files: {:?}",
+        skill
+            .files
+            .iter()
+            .map(|file| file.get_relative_path())
+            .collect::<Vec<_>>()
+    );
+
     let harness = Harness::detect()?;
     info!("Detected harness: {}", harness);
 

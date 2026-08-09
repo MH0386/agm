@@ -223,8 +223,6 @@ impl Display for SkillAllowedTools {
 pub struct SkillPackage {
     /// Validated skill identifier; must match the frontmatter `name`.
     pub name: SkillName,
-    /// Immutable registry revision, such as a Git commit SHA.
-    pub revision: String,
     /// Files that make up the skill, including `SKILL.md` and any resources.
     pub files: Vec<SkillPackageFile>,
 }

@@ -4,10 +4,10 @@ use agm_core::skills::{SkillFileInformation, SkillName, SkillPackage, SkillPacka
 use color_eyre::eyre::{Context, Result, bail};
 use flate2::read::GzDecoder;
 use std::io::{Cursor, Read};
-use std::str::FromStr;
 use std::{ffi::OsStr, path::PathBuf};
 use tar::{Archive, Entries, EntryType};
 use tokio::io;
+use tracing::debug;
 
 /// Opens a gzip reader over the in-memory archive and rejects a missing gzip header.
 fn gzip_reader<'a>(archive_bytes: &'a [u8]) -> Result<impl Read + 'a> {
@@ -85,43 +85,49 @@ impl<R: Read> From<Entries<'_, R>> for SkillArchivedEntries {
     }
 }
 
-/// Parses a skill package from a buffered repository tarball using production limits.
-pub async fn parse_skill_package(
-    archive_bytes: &[u8],
-    requested_name: SkillName,
-    revision: String,
-) -> Result<SkillPackage> {
+/// Parses skill packages from an in-memory repository tarball bytes.
+pub async fn parse_skill_archive_bytes(archive_bytes: &[u8]) -> Result<Vec<SkillPackage>> {
     let decoder = gzip_reader(archive_bytes)?;
     let mut archive = Archive::new(decoder);
     let entries = archive
         .entries()
         .context("Failed to initialize tar iteration while parsing skill package")?;
-    let mut files = collect_skill_files(entries).await?;
-    files.retain(|file| {
-        SkillName::from_str(
-            file.get_relative_path()
-                .parent()
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .trim_start_matches(
-                    file.get_relative_path()
-                        .parent()
-                        .unwrap()
-                        .parent()
-                        .unwrap()
-                        .to_str()
-                        .unwrap(),
-                )
-                .trim_start_matches("/"),
-        )
-        .map_or(false, |name| name == requested_name)
-    });
-    Ok(SkillPackage {
-        name: requested_name,
-        revision,
-        files,
-    })
+    let skill_files = collect_skill_files(entries).await?;
+    let skill_names = skill_files
+        .iter()
+        .filter_map(|file| match file {
+            SkillPackageFile::Root(root) => Some(root.frontmatter.name.clone()),
+            SkillPackageFile::NonRoot(_) => None,
+        })
+        .collect::<Vec<SkillName>>();
+    debug!("Skill names: {:?}", skill_names);
+    debug!(
+        "Files: {:?}",
+        skill_files
+            .iter()
+            .map(|file| file.get_relative_path())
+            .collect::<Vec<_>>()
+    );
+
+    Ok(skill_names
+        .into_iter()
+        .map(|name| SkillPackage {
+            name: name.clone(),
+            files: skill_files
+                .to_vec()
+                .into_iter()
+                .filter(|file| match file {
+                    SkillPackageFile::Root(root) => root.frontmatter.name == name,
+                    SkillPackageFile::NonRoot(non_root) => non_root
+                        .information
+                        .relative_path
+                        .components()
+                        .into_iter()
+                        .any(|component| component.as_os_str() == name.as_str()),
+                })
+                .collect::<Vec<_>>(),
+        })
+        .collect::<Vec<_>>())
 }
 
 async fn collect_skill_files<R: Read>(entries: Entries<'_, R>) -> Result<Vec<SkillPackageFile>> {

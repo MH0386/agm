@@ -1,5 +1,5 @@
 use crate::registry::github::{GitHubOwner, GitHubRepoName};
-use crate::skills::{SkillName, SkillPackage};
+use crate::skills::SkillPackage;
 use color_eyre::eyre::{Result, bail};
 pub mod github;
 
@@ -14,7 +14,8 @@ pub enum RegistrySource {
 
 #[allow(async_fn_in_trait)]
 pub trait Registry {
-    async fn fetch_skill(&self, name: &SkillName) -> Result<SkillPackage>;
+    async fn fetch_skills(&self) -> Result<Vec<SkillPackage>>;
+    async fn get_sha(&self) -> Result<String>;
 }
 
 /// Parses a source string like `github:owner/repo` or `https://github.com/owner/repo` into a `RegistrySource`.
