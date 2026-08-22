@@ -1,9 +1,17 @@
 [tools]
 rust = "stable"
 entire = "latest"
+tombi = "latest"
 
 [env]
 RUST_LOG = "debug"
 
 [settings]
 minimum_release_age = "0d"
+
+[tasks.test]
+run = "cargo test"
+
+[[watch_files]]
+patterns = ["src/**/*.rs"]
+run = "cargo fmt"
