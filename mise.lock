@@ -13,6 +13,10 @@ url_api = "https://api.github.com/repos/entireio/cli/releases/assets/511959146"
 version = "0.3.3"
 backend = "npm:openwiki"
 
+[[tools."pipx:commitizen"]]
+version = "4.17.1"
+backend = "pipx:commitizen"
+
 [[tools.prek]]
 version = "0.4.14"
 backend = "aqua:j178/prek"

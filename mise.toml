@@ -4,6 +4,7 @@ entire = "latest"
 tombi = "latest"
 "npm:openwiki" = "latest"
 prek = "latest"
+"pipx:commitizen" = "latest"
 
 [env]
 # RUST_LOG = "debug"
