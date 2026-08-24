@@ -9,9 +9,17 @@ checksum = "sha256:ceccb056b8f7991d98d5f9819bf5665c39a34da87e68e5677a154602c0254
 url = "https://github.com/entireio/cli/releases/download/v0.10.0/entire_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/entireio/cli/releases/assets/511959146"
 
+[[tools.github-cli]]
+version = "2.96.0"
+backend = "aqua:cli/cli"
+
 [[tools."npm:openwiki"]]
 version = "0.3.3"
 backend = "npm:openwiki"
+
+[[tools."pipx:commitizen"]]
+version = "4.17.1"
+backend = "pipx:commitizen"
 
 [[tools.prek]]
 version = "0.4.14"
